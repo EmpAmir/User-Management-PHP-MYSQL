@@ -112,24 +112,22 @@ if (strlen($_SESSION['alogin']) == 0) {
 					<div class="row">
 						<div class="col-md-12">
 
-							<h2 class="page-title">Total Buy USDT -<?php echo date("l jS \of F Y") ?></h2>
+							<h2 class="page-title">Total Buy USDT</h2>
 
 							<!-- Zero Configuration Table -->
 							<div class="panel panel-default">
 								<div class="panel-heading">BUY USDT</div>
 								<div class="panel-body">
 									<?php if ($error) { ?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } else if ($msg) { ?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php } ?>
-									<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+									<table id="zctb" class="display table table-striped table-bordered table-hover text-center" cellspacing="0" width="100%">
 										<thead>
 											<tr>
 												<th>#</th>
 												<th>User_Name</th>
+												<th>Date</th>
 												<th>USDT_Rate</th>
 												<th>USDT_Total</th>
 												<th>INR_Total</th>
-												<th>Sell INR_Total</th>
-												<th>Rem_Bal</th>
-												<th>Status</th>
 												<!-- <th>Action</th> -->
 											</tr>
 										</thead>
@@ -148,18 +146,17 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<td>
 															<a href="../index.php"><?php echo htmlentities($result->user_name); ?></a>
 														</td>
+														<td><?php echo htmlentities($result->order_date); ?></td>
 														<td>$<?php echo htmlentities($result->usdt_rate); ?></td>
 														<td>$<?php echo htmlentities($result->usdt_total); ?></td>
 														<td>₹<?php echo htmlentities($result->inr_total); ?></td>
-														<td>BAki ache</td>
-														<td>BAki ache</td>
-														<td>
+														<!-- <td>
 															<?php if ($result->status == 1) { ?>
 																<a href="userlist.php?confirm=<?php echo htmlentities($result->id); ?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a>
 															<?php } else { ?>
 																<a href="userlist.php?unconfirm=<?php echo htmlentities($result->id); ?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
 															<?php } ?>
-														</td>
+														</td> -->
 														<!-- <td>
 															<a href="edit-user.php?edit=<?php echo $result->id; ?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 															<a href="userlist.php?del=<?php echo $result->id; ?>&name=<?php echo htmlentities($result->email); ?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
@@ -170,6 +167,20 @@ if (strlen($_SESSION['alogin']) == 0) {
 											} ?>
 
 										</tbody>
+										<tr>
+											<?php
+											$total_usdt = $dbh->query("SELECT SUM(usdt_total) AS total FROM orders;")->fetchColumn();
+											$total_inr = $dbh->query("SELECT SUM(inr_total) AS total FROM orders ;")->fetchColumn();
+											$total_inr_sell = $dbh->query("SELECT SUM(inr_total) AS total FROM sell where user_name = '$user_name';")->fetchColumn();
+											$remaining = $total_inr - $total_inr_sell;
+											?>
+											<th colspan="3" class="text-center">Total</th>
+											<td></td>
+											<td>$ <?php echo number_format($total_usdt); ?></td>
+											<td> <?php $fmt = new NumberFormatter('en_IN', NumberFormatter::CURRENCY);
+													echo $fmt->formatCurrency($remaining, "INR ");; ?></td>
+
+										</tr>
 									</table>
 								</div>
 							</div>

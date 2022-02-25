@@ -112,7 +112,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 					<div class="row">
 						<div class="col-md-12">
 
-							<h2 class="page-title">Total Transfer INR -<?php echo date("l jS \of F Y") ?></h2>
+							<h2 class="page-title">Total Transfer INR</h2>
 
 							<!-- Zero Configuration Table -->
 							<div class="panel panel-default">
@@ -124,6 +124,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 											<tr>
 												<th>#</th>
 												<th>User_Name</th>
+												<th>Sell_Date</th>
 												<th>INR_Total</th>
 												<th>UTR</th>
 												<th>Status</th>
@@ -143,8 +144,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 													<tr>
 														<td><?php echo htmlentities($cnt); ?></td>
 														<td><a href="../index.php"><?php echo htmlentities($result->user_name); ?></a></td>
+														<td><?php echo htmlentities($result->sell_date); ?></td>
 														<td>₹<?php echo htmlentities($result->inr_total); ?></td>
-														<td>2145658978</td>
+														<td><?php echo htmlentities($result->utr); ?></td>
 														<td>
 															<?php if ($result->status == 1) { ?>
 																<a href="userlist.php?confirm=<?php echo htmlentities($result->id); ?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a>
@@ -162,6 +164,15 @@ if (strlen($_SESSION['alogin']) == 0) {
 											} ?>
 
 										</tbody>
+										<tr>
+											<?php
+											$total_inr_sell = $dbh->query("SELECT SUM(inr_total) AS total FROM sell;")->fetchColumn();
+											?>
+											<th class="text-center" colspan="3">Total TRF Amount</th>
+											<td colspan="3"><?php $fmt = new NumberFormatter('en_IN', NumberFormatter::CURRENCY);
+															echo $fmt->formatCurrency($total_inr_sell, "INR "); ?></td>
+											<td></td>
+										</tr>
 									</table>
 								</div>
 							</div>

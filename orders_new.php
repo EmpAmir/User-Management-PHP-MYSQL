@@ -178,9 +178,9 @@ if (strlen($_SESSION['alogin']) == 0) {
 											</tbody>
 											<tr>
 												<?php
-												$total_usdt = $dbh->query("SELECT SUM(usdt_total) AS total FROM orders where user_name = '$user_name';")->fetchColumn();
-												$total_inr = $dbh->query("SELECT SUM(inr_total) AS total FROM orders where user_name = '$user_name';")->fetchColumn();
-												$total_inr_sell = $dbh->query("SELECT SUM(inr_total) AS total FROM sell where user_name = '$user_name';")->fetchColumn();
+												$total_usdt = $dbh->query("SELECT SUM(usdt_total) AS total FROM orders where user_name = '$user_name' and  DATE(sell_date) = CURDATE();")->fetchColumn();
+												$total_inr = $dbh->query("SELECT SUM(inr_total) AS total FROM orders where user_name = '$user_name' and  DATE(sell_date) = CURDATE();")->fetchColumn();
+												$total_inr_sell = $dbh->query("SELECT SUM(inr_total) AS total FROM sell where user_name = '$user_name' and  DATE(sell_date) = CURDATE();")->fetchColumn();
 												$remaining = $total_inr - $total_inr_sell;
 												?>
 												<th colspan="2" class="text-center">Total</th>
